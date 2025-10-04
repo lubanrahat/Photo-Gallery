@@ -1,0 +1,63 @@
+# =========================
+# Root-level ignores
+# =========================
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Editor folders
+.vscode/
+.idea/
+*.swp
+
+# OS files
+Thumbs.db
+
+# =========================
+# FRONTEND (React / Vite / Next.js)
+# =========================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/.DS_Store
+
+# React Testing outputs
+frontend/coverage/
+
+# =========================
+# BACKEND (Node / Express / Nest)
+# =========================
+backend/node_modules/
+backend/dist/
+backend/build/
+backend/.env
+backend/.env.local
+backend/.DS_Store
+
+# Logs and runtime files
+backend/logs/
+backend/*.log
+backend/pids/
+backend/*.pid
+backend/*.seed
+backend/tmp/
+backend/uploads/
+
+# PM2 logs
+backend/.pm2/
