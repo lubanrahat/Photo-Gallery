@@ -3,42 +3,56 @@ import "./gallery.css";
 import GalleryItem from "../galleryItem/galleryItem";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-// Temporary fallback
-// const items = [
-//   { id: 1, media: "/pins/pin1.jpeg", width: 1260, height: 1000 },
-//   { id: 2, media: "/pins/pin2.jpeg", width: 1260, height: 1400 },
-//   { id: 3, media: "/pins/pin3.jpeg", width: 1260, height: 1400 },
-//   // ... (rest of your items)
-// ];
-
-const fetchPins = async ({pageParam}) => {
-  const res = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}/pin?cursor=${pageParam}`);
+const fetchPins = async ({ pageParam }) => {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_ENDPOINT}/pin?cursor=${pageParam}`
+  );
   return res.data;
 };
 
 const Gallery = () => {
-  const { data,fetchNextPage,hasNextPage,status } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, status, error } = useInfiniteQuery({
     queryKey: ["pin"],
     queryFn: fetchPins,
     initialPageParam: 0,
-    getNextPageParam: (lastPage,pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
-  if (status === "pending") return <div>Loading...</div>;
+  if (status === "pending") {
+    return (
+      <div className="loading-wrap">
+        <span className="loader"></span>
+        <span className="loading-text">Loading...</span>
+      </div>
+    );
+  }
 
-  if (status === "error")
-    return <div className="error">Failed to load pins:</div>;
+  if (status === "error") {
+    return (
+      <div className="error">
+        Failed to load pins: {error?.message || "Unknown error"}
+      </div>
+    );
+  }
 
-  // fallback to local items if API returns nothing
-  console.log(data);
+  const allPins = data?.pages.flatMap((page) => page.pins) || [];
 
   return (
-    <div className="gallery">
-      {/* {data?.map((item) => (
-        <GalleryItem key={item._id} item={item} />
-      ))} */}
-    </div>
+    <InfiniteScroll
+      dataLength={allPins.length}
+      next={fetchNextPage}
+      hasMore={!!hasNextPage}
+      loader={<h4>Loading more pins...</h4>}
+      endMessage={<h3>All pins loaded</h3>}
+    >
+      <div className="gallery">
+        {allPins.map((item) => (
+          <GalleryItem key={item._id} item={item} />
+        ))}
+      </div>
+    </InfiniteScroll>
   );
 };
 

@@ -1,42 +1,70 @@
+:root {
+  --size: 64px;
+  --track: #e6e6e6;
+  --accent: #2563eb;
+}
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  height: 100vh;
+}
+.loader {
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 0 6px var(--track);
+  background: conic-gradient(var(--accent) 0 30%, rgba(0,0,0,0) 30% 100%);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 10px), black calc(100% - 10px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 10px), black calc(100% - 10px));
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading-text {
+  font-size: 14px;
+  color: #333;
+  letter-spacing: 0.2px;
+}
 .gallery {
-    display: grid;
-    grid-template-columns: repeat(7,1fr);
-    gap: 16px;
-    grid-auto-rows: 10px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 16px;
+  grid-auto-rows: 10px;
 }
-
 @media (max-width: 1746px) {
-    .gallery {
-        grid-template-columns: repeat(6,1fr);
-    }
+  .gallery {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
-
 @media (max-width: 1509px) {
-    .gallery {
-        grid-template-columns: repeat(5,1fr);
-    }
+  .gallery {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
-
 @media (max-width: 1272px) {
-    .gallery {
-        grid-template-columns: repeat(4,1fr);
-    }
+  .gallery {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
-
 @media (max-width: 1035px) {
-    .gallery {
-        grid-template-columns: repeat(3,1fr);
-    }
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
-
 @media (max-width: 798px) {
-    .gallery {
-        grid-template-columns: repeat(2,1fr);
-    }
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
-
 @media (max-width: 475px) {
-    .gallery {
-        grid-template-columns: repeat(1,1fr);
-    }
+  .gallery {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
