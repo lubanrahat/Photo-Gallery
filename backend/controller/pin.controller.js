@@ -1,4 +1,6 @@
 import Pins from "../models/pin.model.js";
+import mongoose from "mongoose";
+import User from "../models/user.model.js";
 
 export const getPins = async (req, res) => {
   try {
@@ -10,7 +12,7 @@ export const getPins = async (req, res) => {
       search
         ? {
             $or: [
-              { title: { $regex: search, $option: "i" } },
+              { title: { $regex: search, $options: "i" } },
               { tag: { $in: [search] } },
             ],
           }
@@ -34,3 +36,24 @@ export const getPins = async (req, res) => {
   }
 };
 
+export const getPin = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid pin ID" });
+    }
+    const pin = await Pins.findById(id).populate(
+      "user",
+      "username img displayName"
+    );
+
+    if (!pin) {
+      return res.status(404).json({ message: "Pin not found" });
+    }
+    res.status(200).json(pin);
+  } catch (error) {
+    console.error("❌ Error fetching pin:", error.message);
+    res.status(500).json({ message: "Failed to fetch pin" });
+  }
+};
