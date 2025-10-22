@@ -3,9 +3,33 @@ import "./profilePage.css";
 import Image from "../../components/image/image";
 import Gallery from "../../components/gallery/gallery";
 import Collections from "../../components/collections/collections";
+import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import apiRequest from "../../utils/apiRequest";
 
 const ProfilePage = () => {
   const [type, setType] = useState("created");
+  const { username } = useParams();
+
+  const { data, isPending, error } = useQuery({
+    queryKey: ["profile", username],
+    queryFn: () => apiRequest.get(`/users/${username}`).then((res) => res.data),
+  });
+
+  console.log(data);
+
+  if (isPending) return <span>Loading...</span>;
+
+  if (error) {
+    const serverMsg = error?.response?.data?.message;
+    return (
+      <span>
+        An error has occurred: {serverMsg || error?.message || "Unknown error"}
+      </span>
+    );
+  }
+
+  if (!data) return <span>Data not found</span>;
 
   return (
     <div className="profilePage">
@@ -13,12 +37,15 @@ const ProfilePage = () => {
         className="profileImg"
         w={100}
         h={100}
-        path="/general/noAvatar.png"
+        path={data.img || "/general/noAvatar.png"}
         alt="Profile"
       />
-      <h1 className="profileName">John Doe</h1>
-      <span className="profileUsername">@johndoe</span>
-      <div className="followCounts">10 followers · 20 following</div>
+      <h1 className="profileName">{data.displayName || "Unknown User"}</h1>
+      <span className="profileUsername">@{data.username}</span>
+      <div className="followCounts">
+        {data.followers?.length || 0} followers · {data.following?.length || 0}{" "}
+        following
+      </div>
 
       <div className="profileInteractions">
         <Image path="/general/share.svg" alt="Share" />
@@ -43,7 +70,12 @@ const ProfilePage = () => {
           Saved
         </span>
       </div>
-      {type === "created" ? <Gallery /> : <Collections />}
+
+      {type === "created" ? (
+        <Gallery userId={data._id} />
+      ) : (
+        <Collections userId={data._id} />
+      )}
     </div>
   );
 };

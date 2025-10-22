@@ -14,17 +14,21 @@ const PostPage = () => {
     queryKey: ["pin", id],
     queryFn: () => apiRequest.get(`/pin/${id}`).then((res) => res.data),
   });
-  if(isPending) {
-    return <span>Loading...</span>
+  if (isPending) {
+    return <span>Loading...</span>;
   }
-  if(error) {
+  if (error) {
     const serverMsg = error?.response?.data?.message;
-    return <span>An error has occurred: {serverMsg || error?.message || "Unknown error"}</span>
+    return (
+      <span>
+        An error has occurred: {serverMsg || error?.message || "Unknown error"}
+      </span>
+    );
   }
-  if(!data) {
-    return <span>Data not found</span>
+  if (!data) {
+    return <span>Data not found</span>;
   }
-  console.log(data.user.img)
+  console.log(data.user.img);
   return (
     <div className="postPage">
       <Link to="/">
@@ -43,7 +47,7 @@ const PostPage = () => {
         </div>
         <div className="postDetails">
           <PostInreractions />
-          <Link to="/john" className="postUser">
+          <Link to={`/${data.user.username}`} className="postUser">
             <Image path={data.user.img || "general/noAvatar.png"} />
             <span>{data.user.displayName}</span>
           </Link>
@@ -55,4 +59,3 @@ const PostPage = () => {
 };
 
 export default PostPage;
-

@@ -8,7 +8,7 @@ const pinsSchema = new Schema(
     },
     width: {
       type: Number,
-      required: true,
+    required: true,
     },
     height: {
       type: Number,
